@@ -17,11 +17,15 @@ from django.contrib import admin
 from django.urls import path
 
 from .views import (
-    response, CustomerView
+    response, CustomerView, ProductView, PaymentView, TransactionView
 )
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', response.as_view()),
     path('customer', CustomerView.as_view()),
+    path('product', ProductView.as_view()),
+    path('payment', PaymentView.as_view()),
+    path('transaction', TransactionView.as_view()),
+
 ]

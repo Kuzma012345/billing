@@ -3,9 +3,12 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 
 from billing.models.customer import Customer, Balance
+from billing.models.products import Product
 
 from billing.serializers.customer_serializer import CreateCustomerSerializer, GetCustomerSerializer
 from billing.serializers.balance_serializer import GetBalanceSerializer
+
+from billing.serializers.product_serializer import GetProductSerializer
 
 
 class CustomerView(APIView):
@@ -62,6 +65,7 @@ class CustomerView(APIView):
                 customer = Customer.objects.get(pk=serializer.validated_data['customer_id'])
                 if customer.secret == serializer.validated_data['secret']:
                     balance = GetBalanceSerializer(Balance.objects.filter(customer_id=customer), many=True)
+                    product = GetProductSerializer(Product.objects.filter(customer_id=customer), many=True)
                     return Response(
                         {
                             "status": "success",
@@ -69,7 +73,8 @@ class CustomerView(APIView):
                                 "id": customer.pk,
                                 "name": customer.name,
                                 "company": customer.company,
-                                "balance": balance.data
+                                "balance": balance.data,
+                                "products": product.data
                             }
                         }, status=status.HTTP_200_OK
                     )
@@ -82,10 +87,17 @@ class CustomerView(APIView):
                         }, status=status.HTTP_400_BAD_REQUEST
                     )
 
-            else:
-                return Response(
-                    {
-                        "status": "error",
-                        "message": "Wrong signature"
-                    }, status=status.HTTP_400_BAD_REQUEST
-                )
+                else:
+                    return Response(
+                        {
+                            "status": "error",
+                            "message": "Wrong signature"
+                        }, status=status.HTTP_400_BAD_REQUEST
+                    )
+        else:
+            return Response(
+                {
+                    "status": "error",
+                    'field_errors': serializer.errors
+                }, status=status.HTTP_400_BAD_REQUEST
+            )
