@@ -25,12 +25,12 @@ class CustomerView(APIView):
                 )
                 balance_rub = Balance.objects.create(
                     customer=customer,
-                    amount=0,
+                    amount=0.0,
                     currency='RUB'
                 )
                 balance_usd = Balance.objects.create(
                     customer=customer,
-                    amount=0,
+                    amount=0.0,
                     currency='USD'
                 )
                 return Response(

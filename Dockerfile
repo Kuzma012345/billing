@@ -59,5 +59,4 @@ COPY ./ ./
 
 COPY  docker-entrypoint.sh /usr/local/bin/docker-entrypoint.sh
 RUN chmod +x /app/docker-entrypoint.sh
-
 CMD [ "sh", "/app/docker-entrypoint.sh" ]

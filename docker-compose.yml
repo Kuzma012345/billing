@@ -18,3 +18,9 @@ services:
       context: .
     env_file:
       - .env
+    ports:
+      - 80:9000
+    depends_on:
+      - postgres
+    volumes:
+      - .:/app
